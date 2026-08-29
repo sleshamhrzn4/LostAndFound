@@ -1,0 +1,55 @@
+.claims-container {
+    max-width: 700px;
+    margin: 32px auto;
+    padding: 0 16px;
+    text-align: left;
+}
+
+.claims-container h2 {
+    margin-bottom: 24px;
+}
+
+.claim-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    background: var(--code-bg);
+    box-shadow: var(--shadow);
+}
+
+.claim-card p {
+    margin: 4px 0;
+    font-size: 15px;
+    line-height: 145%;
+    color: var(--text);
+}
+
+.claim-status {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: capitalize;
+    font-family: var(--mono);
+}
+
+.claim-status.pending {
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+}
+
+.claim-status.approved {
+    background: var(--accent-bg);
+    color: var(--text-h);
+    border: 1px solid var(--border);
+}
+
+.claim-status.rejected {
+    background: var(--code-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    opacity: 0.7;
+}
