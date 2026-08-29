@@ -1,12 +1,15 @@
 import { Link, NavLink } from "react-router";
 import { useAuth } from "../context/AuthContext";
+import logo from "../assets/logo1.png";
 
 function NavBar() {
   const { isLoggedIn, logout } = useAuth();
 
   return (
     <nav className="nav-bar">
-      <Link className="nav-brand" to="/">Professionals</Link>
+      <Link className="nav-brand" to="/">
+        <img src={logo} alt="Islington College" className="nav-logo" />
+      </Link>
 
       <div className="nav-links">
         <NavLink to="/my-claims" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>

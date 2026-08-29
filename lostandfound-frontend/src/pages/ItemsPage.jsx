@@ -176,8 +176,8 @@ function ItemsPage() {
                     <option value="Electronics">Electronics</option>
                     <option value="Wallet">Wallet</option>
                     <option value="Bag">Bag</option>
-                    <option value="ID card">ID card</option>
-                    <option value="Books">Books</option>
+                    <option value="Accessories">Accessories</option>
+                    <option value="Clothing">Clothing</option>
                 </select>
 
                 {isAdmin ? (

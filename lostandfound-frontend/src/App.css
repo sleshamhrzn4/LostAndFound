@@ -422,3 +422,17 @@ select:focus {
   margin-bottom: 0.5rem;
   width: 100%;
 }
+
+.nav-brand {
+  background: var(--islington-white);
+  padding: 0.4rem 0.75rem;
+  border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav-logo {
+  height: 44px;
+  width: auto;
+  display: block;
+}

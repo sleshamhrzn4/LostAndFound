@@ -49,7 +49,11 @@ function ItemCard({
 
       <p className="item-category">{item.category}</p>
       <p className="item-location">{item.location}</p>
-      <p className="item-status">Status: {item.status}</p>
+      <p className="item-status">
+        Status: {item.type === "lost"
+          ? (item.status === "claimed" ? "Found" : "Not found")
+          : (item.status === "claimed" ? "Claimed" : "Unclaimed")}
+      </p>
 
       {isAdmin ? (
         <>
