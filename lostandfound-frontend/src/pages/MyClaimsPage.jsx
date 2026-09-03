@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { API_BASE } from '../api';
 
 function MyClaimsPage() {
     const [claims, setClaims] = useState([]);
@@ -6,7 +7,7 @@ function MyClaimsPage() {
     const fetchMyClaims = async () => {
         const token = localStorage.getItem('token');
         try {
-            const res = await fetch('http://localhost:5000/api/claims/mine', {
+            const res = await fetch(`${API_BASE}/claims/mine`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (!res.ok) {
