@@ -39,21 +39,24 @@ function ItemCard({
     }
   };
 
+  const typeLabel = item.type === "lost" ? "Lost" : "Found";
+  const statusLabel = item.type === "lost"
+    ? (item.status === "claimed" ? "Found" : "Not found")
+    : (item.status === "claimed" ? "Claimed" : "Unclaimed");
+
   return (
     <div className="item-card" onClick={() => setShowDetailsModal(true)}>
       {item.imageUrl ? (
         <img src={item.imageUrl} alt={item.title} className="item-image" />
-      ) : null}
-      <h2 className="item-title">{item.title}</h2>
-      <h3 className="item-type">{item.type === "lost" ? "Lost" : "Found"}</h3>
+      ) : (
+        <div className="item-image" aria-label="No image available" />
+      )}
 
+      <h2 className="item-title">{item.title}</h2>
+      <div className={`item-type ${item.type === "found" ? "found" : ""}`}>{typeLabel}</div>
       <p className="item-category">{item.category}</p>
       <p className="item-location">{item.location}</p>
-      <p className="item-status">
-        Status: {item.type === "lost"
-          ? (item.status === "claimed" ? "Found" : "Not found")
-          : (item.status === "claimed" ? "Claimed" : "Unclaimed")}
-      </p>
+      <p className="item-status">{statusLabel}</p>
 
       {isAdmin ? (
         <>
@@ -69,6 +72,7 @@ function ItemCard({
               View claim request
             </button>
           ) : null}
+
           <div className="card-actions">
             <button
               type="button"
@@ -95,7 +99,7 @@ function ItemCard({
       ) : item.status !== "claimed" ? (
         <button
           type="button"
-          className="btn"
+          className="btn btn-primary"
           onClick={(e) => {
             e.stopPropagation();
             handleClaimClick();
@@ -106,26 +110,19 @@ function ItemCard({
       ) : null}
 
       {showDetailsModal ? (
-        <div
-          className="modal-overlay"
-          onClick={() => setShowDetailsModal(false)}
-        >
+        <div className="modal-overlay" onClick={() => setShowDetailsModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h3>{item.title}</h3>
             {item.imageUrl ? (
               <img src={item.imageUrl} alt={item.title} className="item-image" />
             ) : null}
-            <p className="item-description">{item.description}</p>
-            <p className="item-reportedBy">Reported by: {item.reportedBy}</p>
+            <p>{item.description}</p>
+            <p className="item-reportedBy"><strong>Reported by:</strong> {item.reportedBy}</p>
             <p className="item-date">
-              Date: {new Date(item.dateReported).toLocaleDateString()}
+              <strong>Date:</strong> {new Date(item.dateReported).toLocaleDateString()}
             </p>
             <div className="modal-actions">
-              <button
-                type="button"
-                className="link-button"
-                onClick={() => setShowDetailsModal(false)}
-              >
+              <button type="button" className="btn" onClick={() => setShowDetailsModal(false)}>
                 Close
               </button>
             </div>
@@ -142,7 +139,10 @@ function ItemCard({
           }}
         >
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>Claim "{item.title}"</h3>
+            <h3>Claim “{item.title}”</h3>
+            <p className="page-subtitle">
+              Tell the administrator why this item belongs to you.
+            </p>
             <textarea
               placeholder="Why is this yours?"
               value={message}
@@ -150,14 +150,10 @@ function ItemCard({
               rows={4}
             />
             <div className="modal-actions">
-              <button type="button" className="btn" onClick={submitClaim}>
-                Submit Claim
+              <button type="button" className="btn btn-primary" onClick={submitClaim}>
+                Submit claim
               </button>
-              <button
-                type="button"
-                className="link-button"
-                onClick={() => setShowClaimModal(false)}
-              >
+              <button type="button" className="btn" onClick={() => setShowClaimModal(false)}>
                 Cancel
               </button>
             </div>
@@ -173,17 +169,10 @@ function ItemCard({
             setShowSuccessModal(false);
           }}
         >
-          <div
-            className="modal-content modal-success"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <p>Claim submitted successfully!</p>
-            <button
-              type="button"
-              className="btn"
-              onClick={() => setShowSuccessModal(false)}
-            >
-              Close
+          <div className="modal-content modal-success" onClick={(e) => e.stopPropagation()}>
+            <p>Claim submitted successfully.</p>
+            <button type="button" className="btn btn-primary" onClick={() => setShowSuccessModal(false)}>
+              Done
             </button>
           </div>
         </div>
@@ -199,21 +188,14 @@ function ItemCard({
         >
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h3>Claim request</h3>
-            <p>
-              <strong>Requested by:</strong> {claim.claimedBy?.username}
-            </p>
-            {claim.claimedBy?.email ? (
-              <p>
-                <strong>Email:</strong> {claim.claimedBy.email}
-              </p>
-            ) : null}
-            {claim.message ? (
-              <p className="claim-message">"{claim.message}"</p>
-            ) : null}
+            <p><strong>Requested by:</strong> {claim.claimedBy?.username}</p>
+            {claim.claimedBy?.email ? <p><strong>Email:</strong> {claim.claimedBy.email}</p> : null}
+            {claim.message ? <p className="claim-message">“{claim.message}”</p> : null}
+
             <div className="modal-actions">
               <button
                 type="button"
-                className="btn"
+                className="btn btn-primary"
                 onClick={() => {
                   onApproveClaim(claim._id);
                   setShowClaimDetailsModal(false);
@@ -231,11 +213,7 @@ function ItemCard({
               >
                 Reject
               </button>
-              <button
-                type="button"
-                className="link-button"
-                onClick={() => setShowClaimDetailsModal(false)}
-              >
+              <button type="button" className="btn" onClick={() => setShowClaimDetailsModal(false)}>
                 Close
               </button>
             </div>

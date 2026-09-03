@@ -17,7 +17,6 @@ function LoginPage() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
     setError(null);
     setSubmitting(true);
 
@@ -33,54 +32,63 @@ function LoginPage() {
   }
 
   return (
-    <div className="main-page">
-
-
-      <div className="page-body auth-page">
-        <form className="professional-form auth-form" onSubmit={handleSubmit} noValidate>
-          <div className="form-row">
-
-            <input
-              id="email"
-              name="email"
-              type="email"
-              className="form-input"
-              placeholder="Enter your email"
-              value={form.email}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="form-row">
-
-            <input
-              id="password"
-              name="password"
-              type="password"
-              className="form-input"
-              placeholder="Enter your password"
-              value={form.password}
-              onChange={handleChange}
-            />
-          </div>
-
-          {error ? <span className="form-error">{error}</span> : null}
-
-          <div className="form-actions">
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={submitting}
-            >
-              {submitting ? "Logging in…" : "Log in"}
-            </button>
-          </div>
-          <p className="auth-switch">
-            No account yet? <Link to="/register">Register</Link>
+    <div className="main-page auth-page">
+      <div className="auth-shell">
+        <section className="auth-brand-panel">
+          <div className="auth-brand-mark">✦ Lost &amp; Found</div>
+          <h1>Welcome back.</h1>
+          <p>
+            Sign in to manage your claims and help reconnect lost belongings
+            with the people they belong to.
           </p>
-        </form>
+        </section>
 
+        <section className="auth-content">
+          <h2>Sign in</h2>
+          <p className="auth-intro">Use your account details to continue.</p>
 
+          <form className="professional-form auth-form" onSubmit={handleSubmit} noValidate>
+            <div className="form-row">
+              <label className="form-label" htmlFor="email">Email address</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                className="form-input"
+                placeholder="you@example.com"
+                value={form.email}
+                onChange={handleChange}
+                autoComplete="email"
+              />
+            </div>
+
+            <div className="form-row">
+              <label className="form-label" htmlFor="password">Password</label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                className="form-input"
+                placeholder="Enter your password"
+                value={form.password}
+                onChange={handleChange}
+                autoComplete="current-password"
+              />
+            </div>
+
+            {error ? <span className="form-error">{error}</span> : null}
+
+            <div className="form-actions">
+              <button type="submit" className="btn btn-primary" disabled={submitting}>
+                {submitting ? "Signing in…" : "Sign in"}
+              </button>
+            </div>
+
+            <p className="auth-switch">
+              Don&apos;t have an account? <Link to="/register">Create one</Link>
+            </p>
+          </form>
+        </section>
       </div>
     </div>
   );

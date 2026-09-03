@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import { API_BASE } from "../api";
 
 const API_URL = `${API_BASE}/items`;
-const CLAIMS_URL = `${API_BASE}/claims` ;
+const CLAIMS_URL = `${API_BASE}/claims`;
 
 const EMPTY_FORM = {
     title: "",
@@ -47,7 +47,7 @@ function ItemsPage() {
             setError(null);
         } catch (err) {
             console.error(err);
-            setError("Could not load. Is the server running?");
+            setError("Could not load items. Is the server running?");
         } finally {
             setLoading(false);
         }
@@ -100,6 +100,7 @@ function ItemsPage() {
         await axios.delete(`${API_URL}/${id}`, authHeaders());
         loadItems();
     }
+
     async function handleApproveClaim(claimId) {
         await axios.put(`${CLAIMS_URL}/${claimId}`, { status: "approved" }, authHeaders());
         loadItems();
@@ -115,94 +116,180 @@ function ItemsPage() {
         await axios.post(CLAIMS_URL, { itemId, message }, authHeaders());
     }
 
+    const lostCount = items.filter((item) => item.type === "lost").length;
+    const foundCount = items.filter((item) => item.type === "found").length;
+    const resolvedCount = items.filter((item) => item.status === "claimed").length;
+
     if (loading) {
-        return <p className="state-message">Loading…</p>;
+        return <p className="state-message">Loading reports…</p>;
     }
 
     if (error) {
-        return <p className="form-error">{error}</p>;
+        return <p className="state-message form-error">{error}</p>;
     }
 
     return (
         <div className="main-page">
-            <h1 className="page-title">Lost & Found</h1>
-            <div className="type-tabs">
-                <button
-                    type="button"
-                    className={typeFilter === "" ? "tab active" : "tab"}
-                    onClick={() => setTypeFilter("")}
-                >
-                    All
-                </button>
-                <button
-                    type="button"
-                    className={typeFilter === "lost" ? "tab active" : "tab"}
-                    onClick={() => setTypeFilter("lost")}
-                >
-                    Lost
-                </button>
-                <button
-                    type="button"
-                    className={typeFilter === "found" ? "tab active" : "tab"}
-                    onClick={() => setTypeFilter("found")}
-                >
-                    Found
-                </button>
-            </div>
+            <section className="hero">
+                <div className="hero-kicker">Campus Lost &amp; Found</div>
+                <h1>Find what you lost. Return what you found.</h1>
+                <p>
+                    A simple, trusted place to browse reports, reconnect belongings
+                    with their owners, and help your campus community.
+                </p>
 
-            <div className="page-body">
-                <input
-                    className="search-input"
-                    type="search"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search by title…"
-                    aria-label="Search items"
-                />
+                <div className="hero-search">
+                    <input
+                        type="search"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        placeholder="Search for an item…"
+                        aria-label="Search items"
+                    />
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={() => setTypeFilter("")}
+                    >
+                        Search reports
+                    </button>
+                </div>
 
-                <select
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                >
-                    <option value="">All status</option>
-                    <option value="unclaimed">Unclaimed</option>
-                    <option value="claimed">Claimed</option>
-                </select>
-
-                <select
-                    value={categoryFilter}
-                    onChange={(e) => setCategoryFilter(e.target.value)}
-                >
-                    <option value="">All categories</option>
-                    <option value="Electronics">Electronics</option>
-                    <option value="Wallet">Wallet</option>
-                    <option value="Bag">Bag</option>
-                    <option value="Accessories">Accessories</option>
-                    <option value="Clothing">Clothing</option>
-                </select>
-
-                {isAdmin ? (
-                    showForm ? (
-                        <ItemForm
-                            key="new"
-                            initialValues={EMPTY_FORM}
-                            isEditing={false}
-                            onSubmit={handleSubmit}
-                            onCancel={handleCancel}
-                        />
-                    ) : (
+                <div className="hero-actions">
+                    <button type="button" className="btn" onClick={() => setTypeFilter("lost")}>
+                        Browse lost items
+                    </button>
+                    <button type="button" className="btn" onClick={() => setTypeFilter("found")}>
+                        Browse found items
+                    </button>
+                    {isAdmin ? (
                         <button
                             type="button"
                             className="btn btn-primary"
-                            onClick={() => setShowForm(true)}
+                            onClick={() => setShowForm((value) => !value)}
                         >
-                            Report an item
+                            + Report an item
                         </button>
-                    )
-                ) : null}
+                    ) : null}
+                </div>
+            </section>
+
+            <section className="stats-grid" aria-label="Report statistics">
+                <div className="stat-card">
+                    <div className="stat-label">Reports shown</div>
+                    <div className="stat-value">{items.length}</div>
+                </div>
+                <div className="stat-card">
+                    <div className="stat-label">Lost reports</div>
+                    <div className="stat-value">{lostCount}</div>
+                </div>
+                <div className="stat-card">
+                    <div className="stat-label">Found reports</div>
+                    <div className="stat-value">{foundCount}</div>
+                </div>
+                <div className="stat-card">
+                    <div className="stat-label">Resolved</div>
+                    <div className="stat-value">{resolvedCount}</div>
+                </div>
+            </section>
+
+            {showForm ? (
+                <ItemForm
+                    key="new"
+                    initialValues={EMPTY_FORM}
+                    isEditing={false}
+                    onSubmit={handleSubmit}
+                    onCancel={handleCancel}
+                />
+            ) : null}
+
+            <section>
+                <div className="browse-header">
+                    <div>
+                        <h2 className="page-title">Browse reports</h2>
+                        <p className="page-subtitle">
+                            Search by name, narrow results by category or status, and open any card for details.
+                        </p>
+                    </div>
+                </div>
+
+                <div className="type-tabs">
+                    <button
+                        type="button"
+                        className={typeFilter === "" ? "tab active" : "tab"}
+                        onClick={() => setTypeFilter("")}
+                    >
+                        All
+                    </button>
+                    <button
+                        type="button"
+                        className={typeFilter === "lost" ? "tab active" : "tab"}
+                        onClick={() => setTypeFilter("lost")}
+                    >
+                        Lost
+                    </button>
+                    <button
+                        type="button"
+                        className={typeFilter === "found" ? "tab active" : "tab"}
+                        onClick={() => setTypeFilter("found")}
+                    >
+                        Found
+                    </button>
+                </div>
+
+                <div className="filter-bar">
+                    <input
+                        className="search-input"
+                        type="search"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        placeholder="Search by item title…"
+                        aria-label="Search items"
+                    />
+
+                    <select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        aria-label="Filter by status"
+                    >
+                        <option value="">All status</option>
+                        <option value="unclaimed">Unclaimed</option>
+                        <option value="claimed">Claimed</option>
+                    </select>
+
+                    <select
+                        value={categoryFilter}
+                        onChange={(e) => setCategoryFilter(e.target.value)}
+                        aria-label="Filter by category"
+                    >
+                        <option value="">All categories</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Wallet">Wallet</option>
+                        <option value="Bag">Bag</option>
+                        <option value="Accessories">Accessories</option>
+                        <option value="Clothing">Clothing</option>
+                    </select>
+
+                    <button
+                        type="button"
+                        className="btn"
+                        onClick={() => {
+                            setQuery("");
+                            setStatusFilter("");
+                            setCategoryFilter("");
+                            setTypeFilter("");
+                        }}
+                    >
+                        Reset
+                    </button>
+                </div>
 
                 {items.length === 0 ? (
-                    <p className="state-message">No items found</p>
+                    <div className="empty-state">
+                        <div className="empty-state-icon">⌕</div>
+                        <h3>No reports found</h3>
+                        <p>Try a different search term or clear your filters.</p>
+                    </div>
                 ) : (
                     <div className="professional-cards-container">
                         {items.map((item) => (
@@ -220,7 +307,7 @@ function ItemsPage() {
                         ))}
                     </div>
                 )}
-            </div>
+            </section>
         </div>
     );
 }

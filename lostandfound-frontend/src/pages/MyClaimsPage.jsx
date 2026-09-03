@@ -1,25 +1,28 @@
-import { useEffect, useState } from 'react';
-import { API_BASE } from '../api';
+import { useEffect, useState } from "react";
+import { API_BASE } from "../api";
 
 function MyClaimsPage() {
     const [claims, setClaims] = useState([]);
 
     const fetchMyClaims = async () => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
+
         try {
             const res = await fetch(`${API_BASE}/claims/mine`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
+
             if (!res.ok) {
                 const err = await res.json();
-                console.error('Failed to fetch claims:', err.message);
+                console.error("Failed to fetch claims:", err.message);
                 setClaims([]);
                 return;
             }
+
             const data = await res.json();
             setClaims(data);
         } catch (err) {
-            console.error('Network error fetching claims:', err);
+            console.error("Network error fetching claims:", err);
             setClaims([]);
         }
     };
@@ -31,19 +34,29 @@ function MyClaimsPage() {
     return (
         <div className="claims-container">
             <h2>My Claims</h2>
-            {claims.map((claim) => (
-                <div key={claim._id} className="claim-card">
-                    <p>Item: {claim.itemId?.title}</p>
-                    <p>Category: {claim.itemId?.category}</p>
-                    <p>Message: {claim.message}</p>
-                    <p>
-                        Status:{' '}
-                        <span className={`claim-status ${claim.status}`}>
-                            {claim.status}
-                        </span>
-                    </p>
+            <p>Track the claims you have submitted and their current status.</p>
+
+            {claims.length === 0 ? (
+                <div className="empty-state">
+                    <div className="empty-state-icon">✓</div>
+                    <h3>No claims yet</h3>
+                    <p>When you claim an item, it will appear here.</p>
                 </div>
-            ))}
+            ) : (
+                claims.map((claim) => (
+                    <div key={claim._id} className="claim-card">
+                        <p>{claim.itemId?.title}</p>
+                        <p>Category: {claim.itemId?.category}</p>
+                        <p>Message: {claim.message}</p>
+                        <p>
+                            Status:{" "}
+                            <span className={`claim-status ${claim.status}`}>
+                                {claim.status}
+                            </span>
+                        </p>
+                    </div>
+                ))
+            )}
         </div>
     );
 }
