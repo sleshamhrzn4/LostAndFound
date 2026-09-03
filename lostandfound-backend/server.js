@@ -5,7 +5,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const Item = require("./models/Item");
+const Item = require("./models/item");
 const authController = require("./controller/authController");
 const { requireAuth, requireAdmin } = require("./middleware/auth");
 const Log = require("./models/log");
