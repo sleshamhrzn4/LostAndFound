@@ -4,6 +4,7 @@ import "../App.css";
 import ItemCard from "../components/ItemCard";
 import ItemForm from "../components/ItemForm";
 import { useAuth } from "../context/AuthContext";
+import { API_BASE } from "../api";
 
 const API_URL = `${API_BASE}/items`;
 const CLAIMS_URL = `${API_BASE}/claims` ;
