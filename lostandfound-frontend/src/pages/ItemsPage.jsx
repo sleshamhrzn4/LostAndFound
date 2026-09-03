@@ -5,8 +5,8 @@ import ItemCard from "../components/ItemCard";
 import ItemForm from "../components/ItemForm";
 import { useAuth } from "../context/AuthContext";
 
-const API_URL = "http://localhost:5000/api/items";
-const CLAIMS_URL = "http://localhost:5000/api/claims";
+const API_URL = `${API_BASE}/items`;
+const CLAIMS_URL = `${API_BASE}/claims` ;
 
 const EMPTY_FORM = {
     title: "",
