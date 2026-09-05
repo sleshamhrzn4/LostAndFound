@@ -21,12 +21,14 @@ function NavBar() {
           Browse
         </NavLink>
 
-        <NavLink
-          to="/my-claims"
-          className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
-        >
-          My Claims
-        </NavLink>
+        {isLoggedIn && (
+          <NavLink
+            to="/my-claims"
+            className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
+          >
+            My Claims
+          </NavLink>
+        )}
 
         {isLoggedIn ? (
           <button type="button" className="nav-link" onClick={logout}>
