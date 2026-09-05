@@ -1,4 +1,3 @@
-
 require("dotenv").config();
 
 
@@ -9,7 +8,6 @@ const Item = require("./models/item");
 const authController = require("./controller/authController");
 const { requireAuth, requireAdmin } = require("./middleware/auth");
 const Log = require("./models/log");
-const Claim = require("./models/claim");
 
 const cloudinary = require("./config/cloudinary");
 const multer = require('multer');
@@ -175,87 +173,7 @@ app.delete("/api/items/:id", requireAuth, requireAdmin, async (req, res) => {
 });
 
 
-app.post("/api/claims", requireAuth, async (req, res) => {
-  try {
-    const { itemId, message } = req.body;
-    if (!itemId) {
-      return res.status(400).json({ message: "Item ID is required" });
-    }
-
-    const item = await Item.findById(itemId);
-    if (!item) {
-      return res.status(404).json({ message: "Item not found" });
-    }
-
-    const newClaim = await Claim.create({
-      itemId,
-      claimedBy: req.user.id,
-      message,
-    });
-
-    res.status(201).json(newClaim);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: error.message || "Something went wrong" });
-  }
-});
-
-
-app.get("/api/claims", requireAuth, async (req, res) => {
-  try {
-    const claims = await Claim.find().populate("itemId").populate("claimedBy");
-    res.status(200).json(claims);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: error.message || "Something went wrong" });
-  }
-});
-
-app.get("/api/claims/mine", requireAuth, async (req, res) => {
-  try {
-    const claims = await Claim.find({ claimedBy: req.user.id }).populate("itemId", "title category");
-    res.status(200).json(claims);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: error.message || "Something went wrong" });
-  }
-});
-
-
-app.put("/api/claims/:id", requireAuth, requireAdmin, async (req, res) => {
-  try {
-    const { status } = req.body;
-
-    if (!["approved", "rejected"].includes(status)) {
-      return res.status(400).json({ message: "Status must be either approved or rejected" });
-    }
-
-    const updatedClaim = await Claim.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true },);
-
-    if (!updatedClaim) {
-      return res.status(404).json({ message: "Claim not found" });
-    }
-
-    if (status === "approved") {
-      await Item.findByIdAndUpdate(updatedClaim.itemId, { status: "claimed" });
-
-      await Log.create({
-        itemId: updatedClaim.itemId,
-        action: `Claim approved for item`,
-        performedBy: req.user.email,
-      });
-    }
-
-
-    res.status(200).json(updatedClaim);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: error.message || "Something went wrong" });
-  }
-});
+app.use("/api/claims", require("./routes/claimRoutes"));
 
 app.post("/api/register", authController.register);
 app.post("/api/login", authController.login);
