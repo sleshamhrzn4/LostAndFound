@@ -105,7 +105,7 @@ function ItemCard({
             handleClaimClick();
           }}
         >
-          Claim this item
+          {item.type === "lost" ? "I found this item" : "Claim this item"}
         </button>
       ) : null}
 
@@ -139,19 +139,21 @@ function ItemCard({
           }}
         >
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>Claim “{item.title}”</h3>
+            <h3>{item.type === "lost" ? `Report finding "${item.title}"` : `Claim "${item.title}"`}</h3>
             <p className="page-subtitle">
-              Tell the administrator why this item belongs to you.
+              {item.type === "lost"
+                ? "Let the reporter know where and how you found it."
+                : "Tell the administrator why this item belongs to you."}
             </p>
             <textarea
-              placeholder="Why is this yours?"
+              placeholder={item.type === "lost" ? "Where and how did you find it?" : "Why is this yours?"}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               rows={4}
             />
             <div className="modal-actions">
               <button type="button" className="btn btn-primary" onClick={submitClaim}>
-                Submit claim
+                {item.type === "lost" ? "Submit report" : "Submit claim"}
               </button>
               <button type="button" className="btn" onClick={() => setShowClaimModal(false)}>
                 Cancel
@@ -170,7 +172,7 @@ function ItemCard({
           }}
         >
           <div className="modal-content modal-success" onClick={(e) => e.stopPropagation()}>
-            <p>Claim submitted successfully.</p>
+            <p>{item.type === "lost" ? "Report submitted successfully." : "Claim submitted successfully."}</p>
             <button type="button" className="btn btn-primary" onClick={() => setShowSuccessModal(false)}>
               Done
             </button>
