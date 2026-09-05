@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const ClaimRequest = require('../models/claimRequest');
-const Item = require('../models/Item');
-const { requireAuth, requireAdmin } = require('../middleware/auth'); 
+const Item = require('../models/item');
+const { requireAuth, requireAdmin } = require('../middleware/auth');
 
 // POST /api/claims - logged-in user submits a claim
 router.post('/', requireAuth, async (req, res) => {
