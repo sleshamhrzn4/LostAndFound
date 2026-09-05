@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
 :root {
   --brand: #4f46e5;
@@ -31,7 +31,7 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ink);
   background: #fbfbfd;
   -webkit-font-smoothing: antialiased;
@@ -147,18 +147,26 @@ a {
 .hero {
   position: relative;
   overflow: hidden;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
   margin-bottom: 34px;
-  padding: clamp(30px, 6vw, 70px);
-  border-radius: 28px;
-  background:
-    radial-gradient(circle at 85% 15%, rgba(129, 140, 248, .28), transparent 28%),
-    linear-gradient(135deg, #111633 0%, #24265c 55%, #4338ca 100%);
+  padding: clamp(30px, 6vw, 70px) max(24px, calc((100vw - 1180px) / 2 + 24px));
+  border-radius: 0;
+  background-image: url("./assets/hero-flatlay.jpg");
+  background-size: cover;
+  background-position: right center;
+  background-repeat: no-repeat;
   color: white;
-  box-shadow: var(--shadow-md);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 32px;
+  box-shadow: none;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(17,22,51,.92) 0%, rgba(17,22,51,.75) 40%, rgba(17,22,51,.15) 75%);
+  z-index: 0;
 }
 
 .hero-content {
@@ -167,21 +175,9 @@ a {
   z-index: 1;
 }
 
-.hero-image {
-  flex-shrink: 0;
-  width: min(46%, 480px);
-  height: auto;
-  border-radius: 20px;
-  position: relative;
-  z-index: 1;
-}
-
 @media (max-width: 860px) {
   .hero {
     flex-direction: column;
-  }
-  .hero-image {
-    display: none;
   }
 }
 
@@ -213,9 +209,10 @@ a {
   z-index: 1;
   max-width: 760px;
   margin: 0;
-  font-size: clamp(2.7rem, 7vw, 5.2rem);
-  line-height: .98;
-  letter-spacing: -.065em;
+  font-size: clamp(1.7rem, 3.2vw, 2.65rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -.01em;
 }
 
 .hero p {
@@ -320,7 +317,7 @@ a {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 14px;
   margin: 26px 0 46px;
 }
@@ -459,7 +456,6 @@ select.form-input {
 }
 
 .item-card:hover {
-  transform: translateY(-4px);
   border-color: #d9dcf0;
   box-shadow: 0 18px 40px rgba(16, 24, 40, .1);
 }
@@ -678,9 +674,26 @@ input[type="file"].form-input {
 }
 
 .auth-brand-panel {
+  position: relative;
+  overflow: hidden;
   padding: 52px;
   color: white;
-  background: linear-gradient(145deg, #151a3d, #4338ca);
+  background-image: url("./assets/hero-flatlay.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.auth-brand-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(17,22,51,.55) 0%, rgba(17,22,51,.88) 100%);
+  z-index: 0;
+}
+
+.auth-brand-panel > * {
+  position: relative;
+  z-index: 1;
 }
 
 .auth-brand-panel h1 {
@@ -815,39 +828,117 @@ input[type="file"].form-input {
 }
 
 .claims-container {
-  width: min(900px, calc(100% - 40px));
+  width: min(1180px, calc(100% - 40px));
   margin: 0 auto;
   padding: 50px 0 80px;
 }
 
-.claims-container>h2 {
-  margin: 0 0 8px;
-  font-size: 2rem;
-  letter-spacing: -.045em;
+.claims-heading {
+  margin-bottom: 24px;
 }
 
-.claims-container>h2+p {
+.claims-kicker {
+  display: inline-block;
+  margin-bottom: 6px;
+  color: var(--brand);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.claims-container>.claims-heading h2 {
+  margin: 0 0 6px;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+}
+
+.claims-container>.claims-heading p {
+  margin: 0;
   color: var(--muted);
 }
 
-.claim-card {
-  margin: 14px 0;
-  padding: 22px;
-  background: white;
+.claims-table {
+  overflow: hidden;
   border: 1px solid var(--border);
-  border-radius: 16px;
-  box-shadow: var(--shadow-sm);
+  border-radius: 14px;
+  background: white;
 }
 
-.claim-card p {
-  margin: 7px 0;
-  color: #475467;
-  line-height: 1.55;
+.claims-table-head,
+.claims-row {
+  display: grid;
+  grid-template-columns: 1.1fr 1.3fr 1.8fr .8fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 20px;
+  text-align: left;
 }
 
-.claim-card p:first-child {
-  color: var(--ink);
+.claims-table-head {
+  color: var(--muted);
+  font-size: .76rem;
   font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  background: var(--surface-soft);
+  border-bottom: 1px solid var(--border);
+}
+
+.claims-row {
+  border-bottom: 1px solid var(--border);
+}
+
+.claims-row:last-child {
+  border-bottom: 0;
+}
+
+.claims-row-item {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.claims-row-requester {
+  color: #475467;
+  font-size: .9rem;
+}
+
+.claims-row-message {
+  color: #475467;
+  font-size: .9rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.claims-row-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.claims-row-actions .btn {
+  min-height: 34px;
+  padding: 6px 12px;
+  font-size: .8rem;
+}
+
+@media (max-width: 760px) {
+  .claims-table-head {
+    display: none;
+  }
+
+  .claims-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 16px;
+  }
+
+  .claims-row-actions {
+    justify-content: flex-start;
+    margin-top: 6px;
+  }
 }
 
 .claim-status {
@@ -872,10 +963,6 @@ input[type="file"].form-input {
 .claim-status.rejected {
   color: var(--danger);
   background: var(--danger-soft);
-}
-
-.claim-card button {
-  margin: 12px 8px 0 0;
 }
 
 .page-body {

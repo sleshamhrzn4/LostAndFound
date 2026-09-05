@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import logo from "../assets/logo1.png";
 
 function NavBar() {
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, isAdmin, logout } = useAuth();
 
   return (
     <nav className="nav-bar">
@@ -13,12 +13,12 @@ function NavBar() {
       </Link>
 
       <div className="nav-links">
+
         <NavLink
-          to="/"
-          end
+          to="/resolved"
           className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
         >
-          Browse
+          Resolved
         </NavLink>
 
         {isLoggedIn && (
@@ -27,6 +27,15 @@ function NavBar() {
             className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
           >
             My Claims
+          </NavLink>
+        )}
+
+        {isAdmin && (
+          <NavLink
+            to="/claims"
+            className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}
+          >
+            Claims
           </NavLink>
         )}
 

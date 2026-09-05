@@ -40,7 +40,7 @@ router.get('/', requireAuth, requireAdmin, async (req, res) => {
   try {
     const claims = await ClaimRequest.find({ status: 'pending' })
       .populate('item')
-      .populate('requester', 'username email'); // exclude password
+      .populate('requester', 'email role'); // exclude password
     res.json(claims);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -99,6 +99,18 @@ router.patch('/:id/reject', requireAuth, requireAdmin, async (req, res) => {
     if (!claim) return res.status(404).json({ message: 'Claim not found' });
 
     res.json(claim);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// DELETE /api/claims/:id - admin deletes a claim
+router.delete('/:id', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const claim = await ClaimRequest.findByIdAndDelete(req.params.id);
+    if (!claim) return res.status(404).json({ message: 'Claim not found' });
+
+    res.json({ message: 'Claim deleted' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

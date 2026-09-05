@@ -6,6 +6,7 @@ import ItemForm from "../components/ItemForm";
 import { useAuth } from "../context/AuthContext";
 import { API_BASE } from "../api";
 
+
 const API_URL = `${API_BASE}/items`;
 const CLAIMS_URL = `${API_BASE}/claims`;
 
@@ -22,7 +23,6 @@ function ItemsPage() {
     const [items, setItems] = useState([]);
     const [claims, setClaims] = useState([]);
     const [query, setQuery] = useState("");
-    const [statusFilter, setStatusFilter] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("");
     const [showForm, setShowForm] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -38,7 +38,7 @@ function ItemsPage() {
         try {
             const params = {};
             if (query) params.search = query;
-            if (statusFilter) params.status = statusFilter;
+            params.status = "unclaimed";
             if (categoryFilter) params.category = categoryFilter;
             if (typeFilter) params.type = typeFilter;
 
@@ -65,7 +65,7 @@ function ItemsPage() {
 
     useEffect(() => {
         loadItems();
-    }, [query, statusFilter, categoryFilter, typeFilter]);
+    }, [query, categoryFilter, typeFilter]);
 
     useEffect(() => {
         loadClaims();
@@ -116,10 +116,6 @@ function ItemsPage() {
         await axios.post(CLAIMS_URL, { itemId, message }, authHeaders());
     }
 
-    const lostCount = items.filter((item) => item.type === "lost").length;
-    const foundCount = items.filter((item) => item.type === "found").length;
-    const resolvedCount = items.filter((item) => item.status === "claimed").length;
-
     if (loading) {
         return <p className="state-message">Loading reports…</p>;
     }
@@ -131,6 +127,7 @@ function ItemsPage() {
     return (
         <div className="main-page">
             <section className="hero">
+              <div className="hero-content">
                 <div className="hero-kicker">Campus Lost &amp; Found</div>
                 <h1>Find what you lost. Return what you found.</h1>
                 <p>
@@ -172,25 +169,7 @@ function ItemsPage() {
                         </button>
                     ) : null}
                 </div>
-            </section>
-
-            <section className="stats-grid" aria-label="Report statistics">
-                <div className="stat-card">
-                    <div className="stat-label">Reports shown</div>
-                    <div className="stat-value">{items.length}</div>
-                </div>
-                <div className="stat-card">
-                    <div className="stat-label">Lost reports</div>
-                    <div className="stat-value">{lostCount}</div>
-                </div>
-                <div className="stat-card">
-                    <div className="stat-label">Found reports</div>
-                    <div className="stat-value">{foundCount}</div>
-                </div>
-                <div className="stat-card">
-                    <div className="stat-label">Resolved</div>
-                    <div className="stat-value">{resolvedCount}</div>
-                </div>
+              </div>
             </section>
 
             {showForm ? (
@@ -248,16 +227,6 @@ function ItemsPage() {
                     />
 
                     <select
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                        aria-label="Filter by status"
-                    >
-                        <option value="">All status</option>
-                        <option value="unclaimed">Unclaimed</option>
-                        <option value="claimed">Claimed</option>
-                    </select>
-
-                    <select
                         value={categoryFilter}
                         onChange={(e) => setCategoryFilter(e.target.value)}
                         aria-label="Filter by category"
@@ -275,7 +244,6 @@ function ItemsPage() {
                         className="btn"
                         onClick={() => {
                             setQuery("");
-                            setStatusFilter("");
                             setCategoryFilter("");
                             setTypeFilter("");
                         }}
@@ -299,7 +267,7 @@ function ItemsPage() {
                                 onEdit={handleMarkClaimed}
                                 onDelete={handleDelete}
                                 isAdmin={isAdmin}
-                                claim={claims.find((c) => c.itemId?._id === item._id)}
+                                claim={claims.find((c) => c.item?._id === item._id)}
                                 onApproveClaim={handleApproveClaim}
                                 onRejectClaim={handleRejectClaim}
                                 onSubmitClaim={handleSubmitClaim}

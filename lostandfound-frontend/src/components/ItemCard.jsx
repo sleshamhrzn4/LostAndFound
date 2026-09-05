@@ -188,8 +188,7 @@ function ItemCard({
         >
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h3>Claim request</h3>
-            <p><strong>Requested by:</strong> {claim.claimedBy?.username}</p>
-            {claim.claimedBy?.email ? <p><strong>Email:</strong> {claim.claimedBy.email}</p> : null}
+            <p><strong>Requested by:</strong> {claim.requester?.email || "Unknown user"}</p>
             {claim.message ? <p className="claim-message">“{claim.message}”</p> : null}
 
             <div className="modal-actions">
