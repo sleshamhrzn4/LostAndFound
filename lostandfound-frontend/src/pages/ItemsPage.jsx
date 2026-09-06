@@ -126,51 +126,18 @@ function ItemsPage() {
 
     return (
         <div className="main-page">
-            <section className="hero">
-              <div className="hero-content">
-                <div className="hero-kicker">Campus Lost &amp; Found</div>
-                <h1>Find what you lost. Return what you found.</h1>
-                <p>
-                    A simple, trusted place to browse reports, reconnect belongings
-                    with their owners, and help your campus community.
-                </p>
-
-                <div className="hero-search">
-                    <input
-                        type="search"
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Search for an item…"
-                        aria-label="Search items"
-                    />
-                    <button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={() => setTypeFilter("")}
-                    >
-                        Search reports
-                    </button>
-                </div>
-
-                <div className="hero-actions">
-                    <button type="button" className="btn" onClick={() => setTypeFilter("lost")}>
-                        Browse lost items
-                    </button>
-                    <button type="button" className="btn" onClick={() => setTypeFilter("found")}>
-                        Browse found items
-                    </button>
-                    {isAdmin ? (
-                        <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={() => setShowForm((value) => !value)}
-                        >
-                            + Report an item
-                        </button>
-                    ) : null}
-                </div>
-              </div>
-            </section>
+            {!isAdmin && (
+                <section className="hero">
+                  <div className="hero-content">
+                    <div className="hero-kicker">Campus Lost &amp; Found</div>
+                    <h1>Find what you lost. Return what you found.</h1>
+                    <p>
+                        A simple, trusted place to browse reports, reconnect belongings
+                        with their owners, and help your campus community.
+                    </p>
+                  </div>
+                </section>
+            )}
 
             {showForm ? (
                 <ItemForm
@@ -190,30 +157,15 @@ function ItemsPage() {
                             Search by name, narrow results by category or status, and open any card for details.
                         </p>
                     </div>
-                </div>
-
-                <div className="type-tabs">
-                    <button
-                        type="button"
-                        className={typeFilter === "" ? "tab active" : "tab"}
-                        onClick={() => setTypeFilter("")}
-                    >
-                        All
-                    </button>
-                    <button
-                        type="button"
-                        className={typeFilter === "lost" ? "tab active" : "tab"}
-                        onClick={() => setTypeFilter("lost")}
-                    >
-                        Lost
-                    </button>
-                    <button
-                        type="button"
-                        className={typeFilter === "found" ? "tab active" : "tab"}
-                        onClick={() => setTypeFilter("found")}
-                    >
-                        Found
-                    </button>
+                    {isAdmin ? (
+                        <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={() => setShowForm((value) => !value)}
+                        >
+                            + Report an item
+                        </button>
+                    ) : null}
                 </div>
 
                 <div className="filter-bar">
@@ -249,6 +201,30 @@ function ItemsPage() {
                         }}
                     >
                         Reset
+                    </button>
+                </div>
+
+                <div className="type-tabs">
+                    <button
+                        type="button"
+                        className={typeFilter === "" ? "tab active" : "tab"}
+                        onClick={() => setTypeFilter("")}
+                    >
+                        All
+                    </button>
+                    <button
+                        type="button"
+                        className={typeFilter === "lost" ? "tab active" : "tab"}
+                        onClick={() => setTypeFilter("lost")}
+                    >
+                        Lost
+                    </button>
+                    <button
+                        type="button"
+                        className={typeFilter === "found" ? "tab active" : "tab"}
+                        onClick={() => setTypeFilter("found")}
+                    >
+                        Found
                     </button>
                 </div>
 
