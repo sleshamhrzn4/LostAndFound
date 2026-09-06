@@ -9,6 +9,7 @@ import NavBar from "./components/NavBar";
 import MyClaimsPage from './pages/MyClaimsPage';
 import ClaimsPage from './pages/ClaimsPage';
 import ResolvedItemsPage from './pages/Resolveditemspage';
+import Footer from "./components/Footer";
 
 function App() {
   const location = useLocation();
@@ -26,6 +27,7 @@ function App() {
         <Route path="/resolved" element={<ResolvedItemsPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      {!hideNavBar && <Footer />}
     </>
   );
 }

@@ -1,13 +1,12 @@
 import { useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
-
 function ItemCard({
   item,
   onEdit,
   onDelete,
   isAdmin,
-  claim,
+  claims = [],
   onApproveClaim,
   onRejectClaim,
   onSubmitClaim,
@@ -60,7 +59,7 @@ function ItemCard({
 
       {isAdmin ? (
         <>
-          {claim ? (
+          {claims.length > 0 ? (
             <button
               type="button"
               className="btn"
@@ -69,7 +68,7 @@ function ItemCard({
                 setShowClaimDetailsModal(true);
               }}
             >
-              View claim request
+              View claim request{claims.length > 1 ? `s (${claims.length})` : ""}
             </button>
           ) : null}
 
@@ -180,7 +179,7 @@ function ItemCard({
         </div>
       ) : null}
 
-      {showClaimDetailsModal && claim ? (
+      {showClaimDetailsModal && claims.length > 0 ? (
         <div
           className="modal-overlay"
           onClick={(e) => {
@@ -189,31 +188,39 @@ function ItemCard({
           }}
         >
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>Claim request</h3>
-            <p><strong>Requested by:</strong> {claim.requester?.email || "Unknown user"}</p>
-            {claim.message ? <p className="claim-message">“{claim.message}”</p> : null}
+            <h3>Claim request{claims.length > 1 ? "s" : ""}</h3>
+
+            {claims.map((c) => (
+              <div key={c._id} className="claim-request-item">
+                <p><strong>Requested by:</strong> {c.requester?.email || "Unknown user"}</p>
+                {c.message ? <p className="claim-message">“{c.message}”</p> : null}
+
+                <div className="modal-actions">
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => {
+                      onApproveClaim(c._id);
+                      setShowClaimDetailsModal(false);
+                    }}
+                  >
+                    Approve
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={() => {
+                      onRejectClaim(c._id);
+                      setShowClaimDetailsModal(false);
+                    }}
+                  >
+                    Reject
+                  </button>
+                </div>
+              </div>
+            ))}
 
             <div className="modal-actions">
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => {
-                  onApproveClaim(claim._id);
-                  setShowClaimDetailsModal(false);
-                }}
-              >
-                Approve
-              </button>
-              <button
-                type="button"
-                className="btn btn-danger"
-                onClick={() => {
-                  onRejectClaim(claim._id);
-                  setShowClaimDetailsModal(false);
-                }}
-              >
-                Reject
-              </button>
               <button type="button" className="btn" onClick={() => setShowClaimDetailsModal(false)}>
                 Close
               </button>

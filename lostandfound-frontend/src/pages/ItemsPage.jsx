@@ -5,6 +5,7 @@ import ItemCard from "../components/ItemCard";
 import ItemForm from "../components/ItemForm";
 import { useAuth } from "../context/AuthContext";
 import { API_BASE } from "../api";
+import { useSearchParams } from "react-router";
 
 
 const API_URL = `${API_BASE}/items`;
@@ -29,6 +30,14 @@ function ItemsPage() {
     const [error, setError] = useState(null);
     const { token, isAdmin } = useAuth();
     const [typeFilter, setTypeFilter] = useState("");
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+        const urlSearch = searchParams.get("search");
+        if (urlSearch) {
+            setQuery(urlSearch);
+        }
+    }, [searchParams]);
 
     function authHeaders() {
         return { headers: { Authorization: `Bearer ${token}` } };
@@ -128,14 +137,14 @@ function ItemsPage() {
         <div className="main-page">
             {!isAdmin && (
                 <section className="hero">
-                  <div className="hero-content">
-                    <div className="hero-kicker">Campus Lost &amp; Found</div>
-                    <h1>Find what you lost. Return what you found.</h1>
-                    <p>
-                        A simple, trusted place to browse reports, reconnect belongings
-                        with their owners, and help your campus community.
-                    </p>
-                  </div>
+                    <div className="hero-content">
+                        <div className="hero-kicker">Campus Lost &amp; Found</div>
+                        <h1>Find what you lost. Return what you found.</h1>
+                        <p>
+                            A simple, trusted place to browse reports, reconnect belongings
+                            with their owners, and help your campus community.
+                        </p>
+                    </div>
                 </section>
             )}
 
@@ -151,12 +160,7 @@ function ItemsPage() {
 
             <section>
                 <div className="browse-header">
-                    <div>
-                        <h2 className="page-title">Browse reports</h2>
-                        <p className="page-subtitle">
-                            Search by name, narrow results by category or status, and open any card for details.
-                        </p>
-                    </div>
+
                     {isAdmin ? (
                         <button
                             type="button"
@@ -169,15 +173,6 @@ function ItemsPage() {
                 </div>
 
                 <div className="filter-bar">
-                    <input
-                        className="search-input"
-                        type="search"
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Search by item title…"
-                        aria-label="Search items"
-                    />
-
                     <select
                         value={categoryFilter}
                         onChange={(e) => setCategoryFilter(e.target.value)}
@@ -191,42 +186,31 @@ function ItemsPage() {
                         <option value="Clothing">Clothing</option>
                     </select>
 
-                    <button
-                        type="button"
-                        className="btn"
-                        onClick={() => {
-                            setQuery("");
-                            setCategoryFilter("");
-                            setTypeFilter("");
-                        }}
-                    >
-                        Reset
-                    </button>
+                    <div className="type-tabs">
+                        <button
+                            type="button"
+                            className={typeFilter === "" ? "tab active" : "tab"}
+                            onClick={() => setTypeFilter("")}
+                        >
+                            All
+                        </button>
+                        <button
+                            type="button"
+                            className={typeFilter === "lost" ? "tab active" : "tab"}
+                            onClick={() => setTypeFilter("lost")}
+                        >
+                            Lost
+                        </button>
+                        <button
+                            type="button"
+                            className={typeFilter === "found" ? "tab active" : "tab"}
+                            onClick={() => setTypeFilter("found")}
+                        >
+                            Found
+                        </button>
+                    </div>
                 </div>
 
-                <div className="type-tabs">
-                    <button
-                        type="button"
-                        className={typeFilter === "" ? "tab active" : "tab"}
-                        onClick={() => setTypeFilter("")}
-                    >
-                        All
-                    </button>
-                    <button
-                        type="button"
-                        className={typeFilter === "lost" ? "tab active" : "tab"}
-                        onClick={() => setTypeFilter("lost")}
-                    >
-                        Lost
-                    </button>
-                    <button
-                        type="button"
-                        className={typeFilter === "found" ? "tab active" : "tab"}
-                        onClick={() => setTypeFilter("found")}
-                    >
-                        Found
-                    </button>
-                </div>
 
                 {items.length === 0 ? (
                     <div className="empty-state">
@@ -243,7 +227,7 @@ function ItemsPage() {
                                 onEdit={handleMarkClaimed}
                                 onDelete={handleDelete}
                                 isAdmin={isAdmin}
-                                claim={claims.find((c) => c.item?._id === item._id)}
+                                claims={claims.filter((c) => c.item?._id === item._id)}
                                 onApproveClaim={handleApproveClaim}
                                 onRejectClaim={handleRejectClaim}
                                 onSubmitClaim={handleSubmitClaim}

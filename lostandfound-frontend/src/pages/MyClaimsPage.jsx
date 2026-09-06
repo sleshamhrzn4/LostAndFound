@@ -33,8 +33,11 @@ function MyClaimsPage() {
 
     return (
         <div className="claims-container">
-            <h2>My Claims</h2>
-            <p>Track the claims you have submitted and their current status.</p>
+            <div className="claims-heading">
+                <span className="claims-kicker">Your activity</span>
+                <h2>My Claims</h2>
+                <p>Track the claims you have submitted and their current status.</p>
+            </div>
 
             {claims.length === 0 ? (
                 <div className="empty-state">
@@ -43,19 +46,29 @@ function MyClaimsPage() {
                     <p>When you claim an item, it will appear here.</p>
                 </div>
             ) : (
-                claims.map((claim) => (
-                    <div key={claim._id} className="claim-card">
-                        <p>{claim.itemId?.title}</p>
-                        <p>Category: {claim.itemId?.category}</p>
-                        <p>Message: {claim.message}</p>
-                        <p>
-                            Status:{" "}
-                            <span className={`claim-status ${claim.status}`}>
-                                {claim.status}
-                            </span>
-                        </p>
+                <div className="claims-table">
+                    <div className="claims-table-head">
+                        <span>Item</span>
+                        <span>Category</span>
+                        <span>Message</span>
+                        <span>Status</span>
+                        <span></span>
                     </div>
-                ))
+
+                    {claims.map((claim) => (
+                        <div key={claim._id} className="claims-row">
+                            <span className="claims-row-item">{claim.item?.title || "Item no longer exists"}</span>
+                            <span className="claims-row-requester">{claim.item?.category || "—"}</span>
+                            <span className="claims-row-message">{claim.message}</span>
+                            <span>
+                                <span className={`claim-status ${claim.status}`}>
+                                    {claim.status}
+                                </span>
+                            </span>
+                            <span></span>
+                        </div>
+                    ))}
+                </div>
             )}
         </div>
     );
