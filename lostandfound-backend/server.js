@@ -76,7 +76,7 @@ app.get("/api/logs", requireAuth, async (req, res) => {
 });
 
 
-app.post("/api/items", requireAuth, requireAdmin, upload.single("image"), async (req, res) => {
+app.post("/api/items", requireAuth, upload.single("image"), async (req, res) => {
   try {
     const title = req.body.title;
     const description = req.body.description;

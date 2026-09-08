@@ -5,7 +5,7 @@ import ItemCard from "../components/ItemCard";
 import ItemForm from "../components/ItemForm";
 import { useAuth } from "../context/AuthContext";
 import { API_BASE } from "../api";
-import { useSearchParams } from "react-router";
+import { useSearchParams, useNavigate } from "react-router";
 
 
 const API_URL = `${API_BASE}/items`;
@@ -28,9 +28,10 @@ function ItemsPage() {
     const [showForm, setShowForm] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { token, isAdmin } = useAuth();
+    const { token, isAdmin, isLoggedIn } = useAuth();
     const [typeFilter, setTypeFilter] = useState("");
     const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const urlSearch = searchParams.get("search");
@@ -84,6 +85,13 @@ function ItemsPage() {
         await axios.post(API_URL, values, authHeaders());
         setShowForm(false);
         loadItems();
+    }
+    function handleReportClick() {
+        if (!isLoggedIn) {
+            navigate("/login");
+            return;
+        }
+        setShowForm((value) => !value);
     }
 
     function handleCancel() {
@@ -149,29 +157,21 @@ function ItemsPage() {
             )}
 
             {showForm ? (
-                <ItemForm
-                    key="new"
-                    initialValues={EMPTY_FORM}
-                    isEditing={false}
-                    onSubmit={handleSubmit}
-                    onCancel={handleCancel}
-                />
+                <div className="modal-overlay" onClick={handleCancel}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <ItemForm
+                            key="new"
+                            initialValues={isAdmin ? EMPTY_FORM : { ...EMPTY_FORM, type: "lost" }}
+                            isEditing={false}
+                            onSubmit={handleSubmit}
+                            onCancel={handleCancel}
+                            isAdmin={isAdmin}
+                        />
+                    </div>
+                </div>
             ) : null}
 
             <section>
-                <div className="browse-header">
-
-                    {isAdmin ? (
-                        <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={() => setShowForm((value) => !value)}
-                        >
-                            + Report an item
-                        </button>
-                    ) : null}
-                </div>
-
                 <div className="filter-bar">
                     <select
                         value={categoryFilter}
@@ -209,6 +209,16 @@ function ItemsPage() {
                             Found
                         </button>
                     </div>
+
+
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={handleReportClick}
+                    >
+                        {isAdmin ? "+ Report an item" : "+ Report lost item"}
+                    </button>
+
                 </div>
 
 

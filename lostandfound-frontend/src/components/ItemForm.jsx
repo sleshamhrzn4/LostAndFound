@@ -21,7 +21,7 @@ function validate(form) {
   return errors;
 }
 
-function ItemForm({ initialValues, isEditing, onSubmit, onCancel }) {
+function ItemForm({ initialValues, isEditing, onSubmit, onCancel, isAdmin }) {
   const [form, setForm] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [imageFile, setImageFile] = useState(null);
@@ -71,19 +71,27 @@ function ItemForm({ initialValues, isEditing, onSubmit, onCancel }) {
         {errors.title ? <span className="form-error">{errors.title}</span> : null}
       </div>
 
-      <div className="form-row">
-        <label className="form-label" htmlFor="type">Report type</label>
-        <select id="type" name="type" className="form-input" value={form.type} onChange={handleChange}>
-          <option value="">Select report type</option>
-          <option value="lost">Lost</option>
-          <option value="found">Found</option>
-        </select>
-        {errors.type ? <span className="form-error">{errors.type}</span> : null}
-      </div>
-
+      {isAdmin ? (
+        <div className="form-row">
+          <label className="form-label" htmlFor="type">Report type</label>
+          <select id="type" name="type" className="form-input" value={form.type} onChange={handleChange}>
+            <option value="">Select report type</option>
+            <option value="lost">Lost</option>
+            <option value="found">Found</option>
+          </select>
+          {errors.type ? <span className="form-error">{errors.type}</span> : null}
+        </div>
+      ) : null}
       <div className="form-row">
         <label className="form-label" htmlFor="category">Category</label>
-        <input id="category" name="category" className="form-input" value={form.category} onChange={handleChange} placeholder="Electronics, Wallet, Bag…" />
+        <select id="category" name="category" className="form-input" value={form.category} onChange={handleChange}>
+          <option value="">Select a category</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Wallet">Wallet</option>
+          <option value="Bag">Bag</option>
+          <option value="Accessories">Accessories</option>
+          <option value="Clothing">Clothing</option>
+        </select>
         {errors.category ? <span className="form-error">{errors.category}</span> : null}
       </div>
 
