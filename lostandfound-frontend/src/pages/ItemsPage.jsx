@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import toast from "react-hot-toast";
 import "../App.css";
 import ItemCard from "../components/ItemCard";
 import ItemForm from "../components/ItemForm";
 import { useAuth } from "../context/AuthContext";
 import { API_BASE } from "../api";
 import { useSearchParams, useNavigate } from "react-router";
+import { useToast } from "../components/Toast";
 
 
 const API_URL = `${API_BASE}/items`;
@@ -33,6 +33,7 @@ function ItemsPage() {
     const [typeFilter, setTypeFilter] = useState("");
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    const showToast = useToast();
 
     useEffect(() => {
         const urlSearch = searchParams.get("search");
@@ -87,10 +88,10 @@ function ItemsPage() {
             await axios.post(API_URL, values, authHeaders());
             setShowForm(false);
             loadItems();
-            toast.success("Item reported!");
+            showToast("Item reported!", "success");
         } catch (err) {
             console.error(err);
-            toast.error("Could not report item. Try again.");
+            showToast("Could not report item. Try again.", "error");
         }
     }
 
@@ -114,10 +115,10 @@ function ItemsPage() {
                 authHeaders(),
             );
             loadItems();
-            toast.success(item.status === "unclaimed" ? "Marked as claimed" : "Marked as unclaimed");
+            showToast(item.status === "unclaimed" ? "Marked as claimed" : "Marked as unclaimed", "success");
         } catch (err) {
             console.error(err);
-            toast.error("Could not update item status.");
+            showToast("Could not update item status.", "error");
         }
     }
 
@@ -131,10 +132,10 @@ function ItemsPage() {
         try {
             await axios.delete(`${API_URL}/${id}`, authHeaders());
             loadItems();
-            toast.success("Item deleted");
+            showToast("Item deleted", "success");
         } catch (err) {
             console.error(err);
-            toast.error("Could not delete item.");
+            showToast("Could not delete item.", "error");
         }
     }
 
@@ -143,10 +144,10 @@ function ItemsPage() {
             await axios.put(`${CLAIMS_URL}/${claimId}`, { status: "approved" }, authHeaders());
             loadItems();
             loadClaims();
-            toast.success("Claim approved");
+            showToast("Claim approved", "success");
         } catch (err) {
             console.error(err);
-            toast.error("Could not approve claim.");
+            showToast("Could not approve claim.", "error");
         }
     }
 
@@ -154,20 +155,20 @@ function ItemsPage() {
         try {
             await axios.put(`${CLAIMS_URL}/${claimId}`, { status: "rejected" }, authHeaders());
             loadClaims();
-            toast.success("Claim rejected");
+            showToast("Claim rejected", "success");
         } catch (err) {
             console.error(err);
-            toast.error("Could not reject claim.");
+            showToast("Could not reject claim.", "error");
         }
     }
 
     async function handleSubmitClaim(itemId, message) {
         try {
             await axios.post(CLAIMS_URL, { itemId, message }, authHeaders());
-            toast.success("Claim submitted");
+            showToast("Claim submitted", "success");
         } catch (err) {
             console.error(err);
-            toast.error("Could not submit claim.");
+            showToast("Could not submit claim.", "error");
         }
     }
 

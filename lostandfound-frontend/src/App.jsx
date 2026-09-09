@@ -10,15 +10,14 @@ import MyClaimsPage from './pages/MyClaimsPage';
 import ClaimsPage from './pages/ClaimsPage';
 import ResolvedItemsPage from './pages/Resolveditemspage';
 import Footer from "./components/Footer";
-import { Toaster } from "react-hot-toast";
+import { ToastProvider } from "./components/Toast";
 
 function App() {
   const location = useLocation();
   const hideNavBar = location.pathname === "/login" || location.pathname === "/register";
 
   return (
-    <>
-      <Toaster position="top-right" />
+    <ToastProvider>
       {!hideNavBar && <NavBar />}
       <Routes>
         <Route path="/" element={<ItemsPage />} />
@@ -30,7 +29,8 @@ function App() {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       {!hideNavBar && <Footer />}
-    </>
-  );}
+    </ToastProvider>
+  );
+}
 
 export default App;
