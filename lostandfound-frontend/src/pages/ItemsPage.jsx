@@ -188,7 +188,7 @@ function ItemsPage() {
                 <section className="hero">
                     <div className="hero-content">
                         <div className="hero-kicker">
-                            <span className="live-dot" /> Campus Lost &amp; Found
+                            <span className="live-dot" /> College Lost &amp; Found
                         </div>
                         <h1>
                             {heroText}
