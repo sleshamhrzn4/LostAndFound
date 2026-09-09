@@ -32,15 +32,17 @@ function LoginPage() {
   }
 
   return (
-    <div className="main-page auth-page">
+    <div className=" auth-page">
       <div className="auth-shell">
         <section className="auth-brand-panel">
-          <div className="auth-brand-mark">✦ Lost &amp; Found</div>
-          <h1>Welcome back.</h1>
-          <p>
-            Sign in to manage your claims and help reconnect lost belongings
-            with the people they belong to.
-          </p>
+          <div className="auth-brand-mark"> Lost &amp; Found</div>
+          <div className="auth-brand-text">
+            <h1>Welcome back.</h1>
+            <p>
+              Sign in to manage your claims and help reconnect lost belongings
+              with the people they belong to.
+            </p>
+          </div>
         </section>
 
         <section className="auth-content">

@@ -1,5 +1,5 @@
 import { Link, NavLink, useNavigate } from "react-router";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import logo from "../assets/logo1.png";
 
@@ -7,11 +7,35 @@ function NavBar() {
   const { isLoggedIn, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
+  const debounceRef = useRef(null);
+
+  function runSearch(value) {
+    if (value.trim().length >= 1) {
+      navigate(`/?search=${encodeURIComponent(value.trim())}`);
+    } else {
+      navigate("/");
+    }
+  }
+
+  function handleSearchChange(e) {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      runSearch(value);
+    }, 300);
+  }
 
   function handleSearchSubmit(e) {
     e.preventDefault();
-    navigate(`/?search=${encodeURIComponent(searchTerm)}`);
+    clearTimeout(debounceRef.current);
+    runSearch(searchTerm);
   }
+
+  useEffect(() => {
+    return () => clearTimeout(debounceRef.current);
+  }, []);
 
   return (
     <>
@@ -22,9 +46,6 @@ function NavBar() {
         </Link>
 
         <div className="nav-links">
-
-
-
           {isLoggedIn && !isAdmin && (
             <NavLink
               to="/my-claims"
@@ -33,8 +54,6 @@ function NavBar() {
               My Claims
             </NavLink>
           )}
-
-          
 
           {isLoggedIn ? (
             <button type="button" className="nav-link" onClick={logout}>
@@ -68,7 +87,7 @@ function NavBar() {
           <input
             type="search"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearchChange}
             placeholder="Search items…"
             aria-label="Search items"
           />

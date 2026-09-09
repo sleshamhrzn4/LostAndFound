@@ -89,6 +89,8 @@ function ItemForm({ initialValues, isEditing, onSubmit, onCancel, isAdmin }) {
           <option value="Electronics">Electronics</option>
           <option value="Wallet">Wallet</option>
           <option value="Bag">Bag</option>
+          <option value="Documents">Books</option>
+          <option value="Keys">Keys</option>
           <option value="Accessories">Accessories</option>
           <option value="Clothing">Clothing</option>
         </select>

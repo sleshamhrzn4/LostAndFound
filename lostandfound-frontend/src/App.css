@@ -61,10 +61,11 @@ a {
 }
 
 .page-title {
-  margin: 0;
+
   color: var(--ink);
-  font-size: clamp(2rem, 4vw, 3.1rem);
-  line-height: 1.05;
+  font-size: 25px;
+  line-height: 145%;
+  color: var(--text);
   letter-spacing: -.045em;
   font-weight: 800;
 }
@@ -766,21 +767,18 @@ input[type="file"].form-input {
 }
 
 .auth-page {
-  min-height: calc(100vh - 76px);
-  display: grid;
-  place-items: center;
-  padding: 48px 0;
+  width: 100%;
+  min-height: 100vh;
+  padding: 0;
 }
 
 .auth-shell {
-  width: min(920px, 100%);
+  width: 100%;
+  min-height: 100vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
   overflow: hidden;
   background: white;
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  box-shadow: 0 24px 60px rgba(16, 24, 40, .1);
 }
 
 .auth-brand-panel {
@@ -788,16 +786,19 @@ input[type="file"].form-input {
   overflow: hidden;
   padding: 52px;
   color: white;
-  background-image: url("./assets/hero-flatlay.jpg");
+  background-image: url("./assets/auth-pattern-bg2.jpg");
   background-size: cover;
   background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .auth-brand-panel::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(17, 22, 51, .55) 0%, rgba(17, 22, 51, .88) 100%);
+  background: linear-gradient(180deg, rgba(17, 22, 51, 0) 40%, rgba(17, 22, 51, .75) 100%);
   z-index: 0;
 }
 
@@ -813,11 +814,6 @@ input[type="file"].form-input {
   letter-spacing: -.05em;
 }
 
-.auth-brand-panel p {
-  margin: 0;
-  color: #dce1ff;
-  line-height: 1.7;
-}
 
 .auth-brand-mark {
   font-weight: 800;
@@ -827,6 +823,9 @@ input[type="file"].form-input {
 
 .auth-content {
   padding: 52px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .auth-content h2 {
@@ -1344,5 +1343,49 @@ input[type="file"].form-input {
   .claims-container {
     width: calc(100% - 24px);
     padding-top: 30px;
+  }
+}
+
+
+.typewriter-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  animation: blink 0.8s steps(1) infinite;
+}
+
+@keyframes blink {
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff4d4d;
+  margin-right: 6px;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.6);
+  }
+
+  70% {
+    box-shadow: 0 0 0 8px rgba(255, 77, 77, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 77, 77, 0);
   }
 }

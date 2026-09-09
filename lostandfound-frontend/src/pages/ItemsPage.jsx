@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import { API_BASE } from "../api";
 import { useSearchParams, useNavigate } from "react-router";
 import { useToast } from "../components/Toast";
+import useTypewriter from "../hooks/useTypewriter";
 
 
 const API_URL = `${API_BASE}/items`;
@@ -34,6 +35,7 @@ function ItemsPage() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const showToast = useToast();
+    const heroText = useTypewriter("Find what you lost. Return what you found.");
 
     useEffect(() => {
         const urlSearch = searchParams.get("search");
@@ -185,8 +187,13 @@ function ItemsPage() {
             {!isAdmin && (
                 <section className="hero">
                     <div className="hero-content">
-                        <div className="hero-kicker">Campus Lost &amp; Found</div>
-                        <h1>Find what you lost. Return what you found.</h1>
+                        <div className="hero-kicker">
+                            <span className="live-dot" /> Campus Lost &amp; Found
+                        </div>
+                        <h1>
+                            {heroText}
+                            <span className="typewriter-cursor">|</span>
+                        </h1>
                         <p>
                             A simple, trusted place to browse reports, reconnect belongings
                             with their owners, and help your campus community.
@@ -194,7 +201,6 @@ function ItemsPage() {
                     </div>
                 </section>
             )}
-
             {showForm ? (
                 <div className="modal-overlay" onClick={handleCancel}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -221,6 +227,8 @@ function ItemsPage() {
                         <option value="Electronics">Electronics</option>
                         <option value="Wallet">Wallet</option>
                         <option value="Bag">Bag</option>
+                        <option value="Documents">Books</option>
+                        <option value="Keys">Keys</option>
                         <option value="Accessories">Accessories</option>
                         <option value="Clothing">Clothing</option>
                     </select>

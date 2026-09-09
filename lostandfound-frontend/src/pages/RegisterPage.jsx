@@ -35,15 +35,17 @@ function RegisterPage() {
   }
 
   return (
-    <div className="main-page auth-page">
+    <div className="auth-page">
       <div className="auth-shell">
         <section className="auth-brand-panel">
-          <div className="auth-brand-mark">✦ Lost &amp; Found</div>
-          <h1>Join the community.</h1>
-          <p>
-            Create an account to make claims and help return lost belongings
-            to the people they belong to.
-          </p>
+          <div className="auth-brand-mark"> Lost &amp; Found</div>
+          <div className="auth-brand-text">
+            <h1>Join the community.</h1>
+            <p>
+              Create an account to make claims and help return lost belongings
+              to the people they belong to.
+            </p>
+          </div>
         </section>
 
         <section className="auth-content">
