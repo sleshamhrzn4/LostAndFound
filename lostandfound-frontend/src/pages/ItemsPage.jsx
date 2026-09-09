@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 import "../App.css";
 import ItemCard from "../components/ItemCard";
 import ItemForm from "../components/ItemForm";
@@ -82,10 +83,17 @@ function ItemsPage() {
     }, [isAdmin, items]);
 
     async function handleSubmit(values) {
-        await axios.post(API_URL, values, authHeaders());
-        setShowForm(false);
-        loadItems();
+        try {
+            await axios.post(API_URL, values, authHeaders());
+            setShowForm(false);
+            loadItems();
+            toast.success("Item reported!");
+        } catch (err) {
+            console.error(err);
+            toast.error("Could not report item. Try again.");
+        }
     }
+
     function handleReportClick() {
         if (!isLoggedIn) {
             navigate("/login");
@@ -99,12 +107,18 @@ function ItemsPage() {
     }
 
     async function handleMarkClaimed(item) {
-        await axios.put(
-            `${API_URL}/${item._id}`,
-            { status: item.status === "unclaimed" ? "claimed" : "unclaimed" },
-            authHeaders(),
-        );
-        loadItems();
+        try {
+            await axios.put(
+                `${API_URL}/${item._id}`,
+                { status: item.status === "unclaimed" ? "claimed" : "unclaimed" },
+                authHeaders(),
+            );
+            loadItems();
+            toast.success(item.status === "unclaimed" ? "Marked as claimed" : "Marked as unclaimed");
+        } catch (err) {
+            console.error(err);
+            toast.error("Could not update item status.");
+        }
     }
 
     async function handleDelete(id) {
@@ -114,23 +128,47 @@ function ItemsPage() {
             return;
         }
 
-        await axios.delete(`${API_URL}/${id}`, authHeaders());
-        loadItems();
+        try {
+            await axios.delete(`${API_URL}/${id}`, authHeaders());
+            loadItems();
+            toast.success("Item deleted");
+        } catch (err) {
+            console.error(err);
+            toast.error("Could not delete item.");
+        }
     }
 
     async function handleApproveClaim(claimId) {
-        await axios.put(`${CLAIMS_URL}/${claimId}`, { status: "approved" }, authHeaders());
-        loadItems();
-        loadClaims();
+        try {
+            await axios.put(`${CLAIMS_URL}/${claimId}`, { status: "approved" }, authHeaders());
+            loadItems();
+            loadClaims();
+            toast.success("Claim approved");
+        } catch (err) {
+            console.error(err);
+            toast.error("Could not approve claim.");
+        }
     }
 
     async function handleRejectClaim(claimId) {
-        await axios.put(`${CLAIMS_URL}/${claimId}`, { status: "rejected" }, authHeaders());
-        loadClaims();
+        try {
+            await axios.put(`${CLAIMS_URL}/${claimId}`, { status: "rejected" }, authHeaders());
+            loadClaims();
+            toast.success("Claim rejected");
+        } catch (err) {
+            console.error(err);
+            toast.error("Could not reject claim.");
+        }
     }
 
     async function handleSubmitClaim(itemId, message) {
-        await axios.post(CLAIMS_URL, { itemId, message }, authHeaders());
+        try {
+            await axios.post(CLAIMS_URL, { itemId, message }, authHeaders());
+            toast.success("Claim submitted");
+        } catch (err) {
+            console.error(err);
+            toast.error("Could not submit claim.");
+        }
     }
 
     if (loading) {
@@ -210,7 +248,6 @@ function ItemsPage() {
                         </button>
                     </div>
 
-
                     <button
                         type="button"
                         className="btn btn-primary"
@@ -218,7 +255,6 @@ function ItemsPage() {
                     >
                         {isAdmin ? "+ Report an item" : "+ Report lost item"}
                     </button>
-
                 </div>
 
 

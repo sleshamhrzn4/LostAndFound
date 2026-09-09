@@ -10,6 +10,7 @@ import MyClaimsPage from './pages/MyClaimsPage';
 import ClaimsPage from './pages/ClaimsPage';
 import ResolvedItemsPage from './pages/Resolveditemspage';
 import Footer from "./components/Footer";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const location = useLocation();
@@ -17,6 +18,7 @@ function App() {
 
   return (
     <>
+      <Toaster position="top-right" />
       {!hideNavBar && <NavBar />}
       <Routes>
         <Route path="/" element={<ItemsPage />} />
@@ -29,7 +31,6 @@ function App() {
       </Routes>
       {!hideNavBar && <Footer />}
     </>
-  );
-}
+  );}
 
 export default App;
